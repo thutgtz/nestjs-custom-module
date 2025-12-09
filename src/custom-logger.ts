@@ -1,4 +1,4 @@
-import { Inject, Injectable, LoggerService, Optional, Scope } from '@nestjs/common'
+import { Inject, Injectable, LoggerService, Optional } from '@nestjs/common'
 import { FastifyRequest } from 'fastify'
 import { plainToInstance } from 'class-transformer'
 import { LogModel } from './models/log.model'
@@ -9,7 +9,7 @@ import { LOGGER_MODULE_OPTIONS, DEFAULT_LOG_LEVEL, DEFAULT_SERVICE_NAME, DEFAULT
 import { sanitizePayload } from './utils/sanitizer.util'
 import { _getLoggerContext, CORRELATION_ID_HEADER } from './middleware/correlation.middleware'
 
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable()
 export class CustomLogger implements LoggerService {
   public readonly logger: PinoLogger
   private readonly options: Required<Pick<LoggerModuleOptions, 'maxBodyLength' | 'sensitiveFields' | 'maskPattern'>>

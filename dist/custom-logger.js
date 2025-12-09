@@ -192,7 +192,7 @@ let CustomLogger = CustomLogger_1 = class CustomLogger {
 };
 exports.CustomLogger = CustomLogger;
 exports.CustomLogger = CustomLogger = CustomLogger_1 = __decorate([
-    (0, common_1.Injectable)({ scope: common_1.Scope.TRANSIENT }),
+    (0, common_1.Injectable)(),
     __param(0, (0, common_1.Optional)()),
     __param(0, (0, common_1.Inject)(logger_constants_1.LOGGER_MODULE_OPTIONS)),
     __param(1, (0, common_1.Optional)()),

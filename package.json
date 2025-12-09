@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_USERNAME/nestjs-custom-module.git"
+    "url": "git+https://github.com/thutgtz/nestjs-custom-module.git"
   },
   "keywords": [
     "nestjs",
@@ -25,6 +25,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run build",
     "clean": "rm -rf dist",
     "lint": "eslint \"src/**/*.ts\" --fix",
@@ -64,3 +65,5 @@
     "typescript": "^5.0.0"
   }
 }
+
+git remote add origin git@github.com:thutgtz/nestjs-custom-logger.git

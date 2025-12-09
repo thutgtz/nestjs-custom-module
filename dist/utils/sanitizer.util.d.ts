@@ -2,7 +2,7 @@ declare const DEFAULT_SENSITIVE_FIELDS: string[];
 declare const DEFAULT_MASK_PATTERN = "[REDACTED]";
 declare const DEFAULT_MAX_BODY_LENGTH = 2048;
 export declare function safeStringify(obj: unknown, maxLength?: number): string;
-export declare function maskSensitiveData<T extends Record<string, unknown>>(data: T, sensitiveFields?: string[], maskPattern?: string): T;
+export declare function maskSensitiveData<T>(data: T, sensitiveFields?: string[], maskPattern?: string): T;
 export declare function sanitizePayload(payload: unknown, options?: {
     maxLength?: number;
     sensitiveFields?: string[];

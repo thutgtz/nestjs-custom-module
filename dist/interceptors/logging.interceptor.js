@@ -11,24 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoggingInterceptor = void 0;
 const common_1 = require("@nestjs/common");
+const core_1 = require("@nestjs/core");
 const operators_1 = require("rxjs/operators");
 const custom_logger_1 = require("../custom-logger");
+const exclude_response_logger_decorator_1 = require("../decorators/exclude-response-logger.decorator");
 let LoggingInterceptor = class LoggingInterceptor {
-    constructor(customLogger) {
+    constructor(customLogger, reflector) {
         this.customLogger = customLogger;
+        this.reflector = reflector;
     }
     intercept(context, next) {
+        const excludeResponseLogger = this.reflector.getAllAndOverride(exclude_response_logger_decorator_1.EXCLUDE_RESPONSE_LOGGER_KEY, [context.getHandler(), context.getClass()]);
         const http = context.switchToHttp();
         const request = http.getRequest();
         const response = http.getResponse();
         return next
             .handle()
-            .pipe((0, operators_1.tap)((data) => this.customLogger.logApiRequestResponse(request, data.status, response.statusCode, data)));
+            .pipe((0, operators_1.tap)((data) => this.customLogger.logApiRequestResponse(request, data.status, response.statusCode, excludeResponseLogger ? undefined : data)));
     }
 };
 exports.LoggingInterceptor = LoggingInterceptor;
 exports.LoggingInterceptor = LoggingInterceptor = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [custom_logger_1.CustomLogger])
+    __metadata("design:paramtypes", [custom_logger_1.CustomLogger,
+        core_1.Reflector])
 ], LoggingInterceptor);
 //# sourceMappingURL=logging.interceptor.js.map

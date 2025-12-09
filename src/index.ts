@@ -48,6 +48,7 @@ export {
 
 // Decorators
 export { SwaggerApiResponse } from "./decorators/response-swagger-doc.decorator";
+export { ExcludeResponseLogger, EXCLUDE_RESPONSE_LOGGER_KEY } from "./decorators/exclude-response-logger.decorator";
 
 // Utilities
 export {

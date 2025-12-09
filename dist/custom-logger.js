@@ -97,6 +97,7 @@ let CustomLogger = CustomLogger_1 = class CustomLogger {
             method: request.method,
             body: this.sanitize(request.body),
             param: this.sanitize(request.query),
+            response: this.sanitize(data),
             userId: ctx.userId,
             statusCode,
             httpStatusCode,

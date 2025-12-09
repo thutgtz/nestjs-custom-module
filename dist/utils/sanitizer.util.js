@@ -53,6 +53,9 @@ function maskSensitiveData(data, sensitiveFields = DEFAULT_SENSITIVE_FIELDS, mas
     if (!data || typeof data !== 'object') {
         return data;
     }
+    if (Array.isArray(data)) {
+        return data.map((item) => maskSensitiveData(item, sensitiveFields, maskPattern));
+    }
     const masked = { ...data };
     const lowerCaseSensitiveFields = sensitiveFields.map((f) => f.toLowerCase());
     for (const key of Object.keys(masked)) {

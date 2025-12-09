@@ -49,15 +49,22 @@ export function safeStringify(obj: unknown, maxLength?: number): string {
 }
 
 /**
- * Mask sensitive fields in an object
+ * Mask sensitive fields in an object or array
  */
-export function maskSensitiveData<T extends Record<string, unknown>>(
+export function maskSensitiveData<T>(
   data: T,
   sensitiveFields: string[] = DEFAULT_SENSITIVE_FIELDS,
   maskPattern: string = DEFAULT_MASK_PATTERN
 ): T {
   if (!data || typeof data !== 'object') {
     return data
+  }
+
+  // Handle arrays
+  if (Array.isArray(data)) {
+    return data.map((item) =>
+      maskSensitiveData(item, sensitiveFields, maskPattern)
+    ) as T
   }
 
   const masked = { ...data } as Record<string, unknown>

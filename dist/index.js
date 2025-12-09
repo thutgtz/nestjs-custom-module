@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DEFAULT_MAX_BODY_LENGTH = exports.DEFAULT_MASK_PATTERN = exports.DEFAULT_SENSITIVE_FIELDS = exports.maskSensitiveData = exports.safeStringify = exports.sanitizePayload = exports.SwaggerApiResponse = exports.ResponseStatusCode = exports.BussinessException = exports.CustomResponse = exports.CustomResponseInterceptor = exports.LoggingInterceptor = exports.AllExceptionsFilter = exports.CORRELATION_ID_HEADER = exports.getRequestContext = exports.setUserId = exports.getUserId = exports.getCorrelationId = exports.correlationMiddleware = exports.DEFAULT_ENVIRONMENT = exports.DEFAULT_SERVICE_NAME = exports.DEFAULT_LOG_LEVEL = exports.LOGGER_MODULE_OPTIONS = exports.LogModel = exports.CustomLogger = exports.CustomLoggerModule = void 0;
+exports.DEFAULT_MAX_BODY_LENGTH = exports.DEFAULT_MASK_PATTERN = exports.DEFAULT_SENSITIVE_FIELDS = exports.maskSensitiveData = exports.safeStringify = exports.sanitizePayload = exports.SwaggerApiResponse = exports.ResponseStatusCode = exports.BussinessException = exports.CustomResponse = exports.CustomResponseInterceptor = exports.LoggingInterceptor = exports.AllExceptionsFilter = exports.CORRELATION_ID_HEADER = exports.getRequestContext = exports.setUserId = exports.getUserId = exports.getCorrelationId = exports.correlationMiddleware = exports.DEFAULT_ENVIRONMENT = exports.DEFAULT_SERVICE_NAME = exports.DEFAULT_LOG_LEVEL = exports.LOGGER_MODULE_OPTIONS = exports.LogModel = exports.CustomLogger = exports.HttpModule = exports.CustomLoggerModule = void 0;
 var custom_logger_module_1 = require("./custom-logger.module");
 Object.defineProperty(exports, "CustomLoggerModule", { enumerable: true, get: function () { return custom_logger_module_1.CustomLoggerModule; } });
+var custom_http_module_1 = require("./custom-http.module");
+Object.defineProperty(exports, "HttpModule", { enumerable: true, get: function () { return custom_http_module_1.HttpModule; } });
 var custom_logger_1 = require("./custom-logger");
 Object.defineProperty(exports, "CustomLogger", { enumerable: true, get: function () { return custom_logger_1.CustomLogger; } });
 var log_model_1 = require("./models/log.model");

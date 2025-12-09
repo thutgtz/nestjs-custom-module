@@ -45,6 +45,7 @@
     }
   },
   "dependencies": {
+    "@nestjs/axios": "^4.0.1",
     "class-transformer": "^0.5.1",
     "fastify-plugin": "^5.0.1"
   },
@@ -65,5 +66,3 @@
     "typescript": "^5.0.0"
   }
 }
-
-git remote add origin git@github.com:thutgtz/nestjs-custom-logger.git

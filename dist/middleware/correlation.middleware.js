@@ -38,9 +38,6 @@ exports.correlationMiddleware = (0, fastify_plugin_1.default)((fastify) => {
             done();
         });
     });
-}, {
-    name: 'correlation-middleware',
-    fastify: '4.x',
 });
 function _getLoggerContext() {
     const store = asyncLocalStorage.getStore();

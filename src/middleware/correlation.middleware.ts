@@ -72,10 +72,6 @@ export const correlationMiddleware = fp(
       })
     })
   },
-  {
-    name: 'correlation-middleware',
-    fastify: '4.x',
-  }
 )
 
 /**

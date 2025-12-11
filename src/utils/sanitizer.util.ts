@@ -74,15 +74,17 @@ export function maskSensitiveData<T>(
     }
     processed.add(obj)
 
-    // Handle arrays
+    // Handle arrays - create new array with masked items
     if (Array.isArray(obj)) {
       return obj.map(item => maskRecursive(item, processed))
     }
 
-    // Handle objects - modify in place to reduce memory allocations
-    const result = obj as Record<string, unknown>
-    for (const key in result) {
-      if (Object.prototype.hasOwnProperty.call(result, key)) {
+    // Handle objects - create new object to avoid mutating original
+    const result: Record<string, unknown> = {}
+    const source = obj as Record<string, unknown>
+    
+    for (const key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
         const lowerKey = key.toLowerCase()
         
         // Check if key contains any sensitive field
@@ -96,8 +98,10 @@ export function maskSensitiveData<T>(
 
         if (isSensitive) {
           result[key] = maskPattern
-        } else if (typeof result[key] === 'object' && result[key] !== null) {
-          result[key] = maskRecursive(result[key], processed)
+        } else if (typeof source[key] === 'object' && source[key] !== null) {
+          result[key] = maskRecursive(source[key], processed)
+        } else {
+          result[key] = source[key]
         }
       }
     }

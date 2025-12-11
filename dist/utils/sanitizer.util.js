@@ -65,9 +65,10 @@ function maskSensitiveData(data, sensitiveFields = DEFAULT_SENSITIVE_FIELDS, mas
         if (Array.isArray(obj)) {
             return obj.map(item => maskRecursive(item, processed));
         }
-        const result = obj;
-        for (const key in result) {
-            if (Object.prototype.hasOwnProperty.call(result, key)) {
+        const result = {};
+        const source = obj;
+        for (const key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
                 const lowerKey = key.toLowerCase();
                 let isSensitive = false;
                 for (const field of sensitiveFieldsSet) {
@@ -79,8 +80,11 @@ function maskSensitiveData(data, sensitiveFields = DEFAULT_SENSITIVE_FIELDS, mas
                 if (isSensitive) {
                     result[key] = maskPattern;
                 }
-                else if (typeof result[key] === 'object' && result[key] !== null) {
-                    result[key] = maskRecursive(result[key], processed);
+                else if (typeof source[key] === 'object' && source[key] !== null) {
+                    result[key] = maskRecursive(source[key], processed);
+                }
+                else {
+                    result[key] = source[key];
                 }
             }
         }

@@ -60,31 +60,52 @@ export function maskSensitiveData<T>(
     return data
   }
 
-  // Handle arrays
-  if (Array.isArray(data)) {
-    return data.map((item) =>
-      maskSensitiveData(item, sensitiveFields, maskPattern)
-    ) as T
-  }
+  // Pre-compute lowercase sensitive fields as Set for O(1) lookup
+  const sensitiveFieldsSet = new Set(sensitiveFields.map(f => f.toLowerCase()))
 
-  const masked = { ...data } as Record<string, unknown>
-  const lowerCaseSensitiveFields = sensitiveFields.map((f) => f.toLowerCase())
-
-  for (const key of Object.keys(masked)) {
-    const lowerKey = key.toLowerCase()
-
-    if (lowerCaseSensitiveFields.some((field) => lowerKey.includes(field))) {
-      masked[key] = maskPattern
-    } else if (typeof masked[key] === 'object' && masked[key] !== null) {
-      masked[key] = maskSensitiveData(
-        masked[key] as Record<string, unknown>,
-        sensitiveFields,
-        maskPattern
-      )
+  function maskRecursive(obj: unknown, processed: WeakSet<object>): unknown {
+    if (!obj || typeof obj !== 'object') {
+      return obj
     }
+
+    // Handle circular references
+    if (processed.has(obj)) {
+      return '[Circular]'
+    }
+    processed.add(obj)
+
+    // Handle arrays
+    if (Array.isArray(obj)) {
+      return obj.map(item => maskRecursive(item, processed))
+    }
+
+    // Handle objects - modify in place to reduce memory allocations
+    const result = obj as Record<string, unknown>
+    for (const key in result) {
+      if (Object.prototype.hasOwnProperty.call(result, key)) {
+        const lowerKey = key.toLowerCase()
+        
+        // Check if key contains any sensitive field
+        let isSensitive = false
+        for (const field of sensitiveFieldsSet) {
+          if (lowerKey.includes(field)) {
+            isSensitive = true
+            break
+          }
+        }
+
+        if (isSensitive) {
+          result[key] = maskPattern
+        } else if (typeof result[key] === 'object' && result[key] !== null) {
+          result[key] = maskRecursive(result[key], processed)
+        }
+      }
+    }
+
+    return result
   }
 
-  return masked as T
+  return maskRecursive(data, new WeakSet()) as T
 }
 
 /**

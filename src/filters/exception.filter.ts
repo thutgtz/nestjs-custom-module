@@ -39,7 +39,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       httpStatus = exception.getStatus()
     }
 
-    const log = this.customLogger.logApiRequestResponse(request, responseBody.status, httpStatus)
     if (exception instanceof BadRequestException) {
       exception.message = (exception.getResponse() as object)['message']
       responseBody.message =
@@ -47,6 +46,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
           ? (exception as any)?.message[0]
           : (exception as any)?.message
     }
+    
+    const log = this.customLogger.logApiRequestResponse(request, responseBody.status, httpStatus, responseBody)
     const errLog = this.customLogger.error(exception as Error)
     if (log && errLog && errLog.message) log.message = errLog.message
 

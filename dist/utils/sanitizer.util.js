@@ -53,21 +53,40 @@ function maskSensitiveData(data, sensitiveFields = DEFAULT_SENSITIVE_FIELDS, mas
     if (!data || typeof data !== 'object') {
         return data;
     }
-    if (Array.isArray(data)) {
-        return data.map((item) => maskSensitiveData(item, sensitiveFields, maskPattern));
-    }
-    const masked = { ...data };
-    const lowerCaseSensitiveFields = sensitiveFields.map((f) => f.toLowerCase());
-    for (const key of Object.keys(masked)) {
-        const lowerKey = key.toLowerCase();
-        if (lowerCaseSensitiveFields.some((field) => lowerKey.includes(field))) {
-            masked[key] = maskPattern;
+    const sensitiveFieldsSet = new Set(sensitiveFields.map(f => f.toLowerCase()));
+    function maskRecursive(obj, processed) {
+        if (!obj || typeof obj !== 'object') {
+            return obj;
         }
-        else if (typeof masked[key] === 'object' && masked[key] !== null) {
-            masked[key] = maskSensitiveData(masked[key], sensitiveFields, maskPattern);
+        if (processed.has(obj)) {
+            return '[Circular]';
         }
+        processed.add(obj);
+        if (Array.isArray(obj)) {
+            return obj.map(item => maskRecursive(item, processed));
+        }
+        const result = obj;
+        for (const key in result) {
+            if (Object.prototype.hasOwnProperty.call(result, key)) {
+                const lowerKey = key.toLowerCase();
+                let isSensitive = false;
+                for (const field of sensitiveFieldsSet) {
+                    if (lowerKey.includes(field)) {
+                        isSensitive = true;
+                        break;
+                    }
+                }
+                if (isSensitive) {
+                    result[key] = maskPattern;
+                }
+                else if (typeof result[key] === 'object' && result[key] !== null) {
+                    result[key] = maskRecursive(result[key], processed);
+                }
+            }
+        }
+        return result;
     }
-    return masked;
+    return maskRecursive(data, new WeakSet());
 }
 function sanitizePayload(payload, options = {}) {
     const { maxLength = DEFAULT_MAX_BODY_LENGTH, sensitiveFields = DEFAULT_SENSITIVE_FIELDS, maskPattern = DEFAULT_MASK_PATTERN, } = options;

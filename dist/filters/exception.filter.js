@@ -36,7 +36,6 @@ let AllExceptionsFilter = class AllExceptionsFilter {
         else if (exception instanceof common_1.HttpException) {
             httpStatus = exception.getStatus();
         }
-        const log = this.customLogger.logApiRequestResponse(request, responseBody.status, httpStatus);
         if (exception instanceof common_1.BadRequestException) {
             exception.message = exception.getResponse()['message'];
             responseBody.message =
@@ -44,6 +43,7 @@ let AllExceptionsFilter = class AllExceptionsFilter {
                     ? exception?.message[0]
                     : exception?.message;
         }
+        const log = this.customLogger.logApiRequestResponse(request, responseBody.status, httpStatus, responseBody);
         const errLog = this.customLogger.error(exception);
         if (log && errLog && errLog.message)
             log.message = errLog.message;

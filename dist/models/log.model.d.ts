@@ -10,6 +10,7 @@ export declare class LogModel {
     errorStack?: string;
     statusCode?: string;
     httpStatusCode?: string;
+    header?: string;
     toReadAbleFormat(): string;
 }
 //# sourceMappingURL=log.model.d.ts.map

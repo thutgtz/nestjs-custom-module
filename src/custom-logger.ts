@@ -111,6 +111,7 @@ export class CustomLogger implements LoggerService {
       userId: ctx.userId,
       statusCode,
       httpStatusCode,
+      header: this.sanitize(request.headers),
     })
     this.logger.info(logInfo, 'api-log')
     return logInfo
@@ -129,6 +130,8 @@ export class CustomLogger implements LoggerService {
       param: this.sanitize(res?.config?.params),
       userId: ctx.userId,
       response: this.sanitize(res?.data),
+      httpStatusCode: res?.status,
+      header: this.sanitize(res?.config?.headers),
     })
     this.logger.info(logInfo, 'axios-http')
     return logInfo

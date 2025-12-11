@@ -101,6 +101,7 @@ let CustomLogger = CustomLogger_1 = class CustomLogger {
             userId: ctx.userId,
             statusCode,
             httpStatusCode,
+            header: this.sanitize(request.headers),
         });
         this.logger.info(logInfo, 'api-log');
         return logInfo;
@@ -115,6 +116,8 @@ let CustomLogger = CustomLogger_1 = class CustomLogger {
             param: this.sanitize(res?.config?.params),
             userId: ctx.userId,
             response: this.sanitize(res?.data),
+            httpStatusCode: res?.status,
+            header: this.sanitize(res?.config?.headers),
         });
         this.logger.info(logInfo, 'axios-http');
         return logInfo;

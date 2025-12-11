@@ -10,6 +10,7 @@ export class LogModel {
   errorStack?: string
   statusCode?: string
   httpStatusCode?: string
+  header?: string
 
   toReadAbleFormat() {
     return [

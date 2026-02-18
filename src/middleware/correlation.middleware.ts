@@ -9,6 +9,7 @@ import { randomUUID } from 'crypto'
 export interface RequestContext {
   correlationId: string
   userId?: string
+  timestamp: number
 }
 
 /**
@@ -29,6 +30,13 @@ export function getCorrelationId(): string | undefined {
  */
 export function getUserId(): string | undefined {
   return asyncLocalStorage.getStore()?.userId
+}
+
+/**
+ * Get the request timestamp from request context
+ */
+export function getRequestTimestamp(): number | undefined {
+  return asyncLocalStorage.getStore()?.timestamp
 }
 
 /**
@@ -62,8 +70,9 @@ export const correlationMiddleware = fp(
   (fastify: FastifyInstance) => {
     fastify.addHook('onRequest', (req: FastifyRequest, reply: FastifyReply, done) => {
       const correlationId = (req.headers[CORRELATION_ID_HEADER] as string) || randomUUID()
+      const timestamp = Date.now()
 
-      asyncLocalStorage.run({ correlationId }, () => {
+      asyncLocalStorage.run({ correlationId, timestamp }, () => {
         // Set correlation ID in request headers for downstream use
         req.headers[CORRELATION_ID_HEADER] = correlationId
         // Also set in response headers for client tracking
@@ -78,10 +87,11 @@ export const correlationMiddleware = fp(
  * Internal function used by CustomLogger to get context
  * This is not exported in the public API
  */
-export function _getLoggerContext(): { correlationId?: string; userId?: string } {
+export function _getLoggerContext(): { correlationId?: string; userId?: string; timestamp?: number } {
   const store = asyncLocalStorage.getStore()
   return {
     correlationId: store?.correlationId,
     userId: store?.userId,
+    timestamp: store?.timestamp,
   }
 }

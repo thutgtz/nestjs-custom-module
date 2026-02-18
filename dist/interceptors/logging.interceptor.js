@@ -15,6 +15,7 @@ const core_1 = require("@nestjs/core");
 const operators_1 = require("rxjs/operators");
 const custom_logger_1 = require("../custom-logger");
 const exclude_response_logger_decorator_1 = require("../decorators/exclude-response-logger.decorator");
+const correlation_middleware_1 = require("../middleware/correlation.middleware");
 let LoggingInterceptor = class LoggingInterceptor {
     constructor(customLogger, reflector) {
         this.customLogger = customLogger;
@@ -27,7 +28,11 @@ let LoggingInterceptor = class LoggingInterceptor {
         const response = http.getResponse();
         return next
             .handle()
-            .pipe((0, operators_1.tap)((data) => this.customLogger.logApiRequestResponse(request, data.status, response.statusCode, excludeResponseLogger ? undefined : data)));
+            .pipe((0, operators_1.tap)((data) => {
+            const startTime = (0, correlation_middleware_1.getRequestTimestamp)();
+            const responseTime = startTime ? Date.now() - startTime : undefined;
+            this.customLogger.logApiRequestResponse(request, data.status, response.statusCode, excludeResponseLogger ? undefined : data, responseTime);
+        }));
     }
 };
 exports.LoggingInterceptor = LoggingInterceptor;

@@ -11,6 +11,7 @@ export class LogModel {
   statusCode?: string
   httpStatusCode?: string
   header?: string
+  responseTime?: number
 
   toReadAbleFormat() {
     return [

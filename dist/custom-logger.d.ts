@@ -12,7 +12,7 @@ export declare class CustomLogger implements LoggerService {
     child(scope: string, extraMeta?: Record<string, unknown>): CustomLogger;
     private getContext;
     private sanitize;
-    logApiRequestResponse(request: FastifyRequest, statusCode: string, httpStatusCode: number, data?: unknown): LogModel;
+    logApiRequestResponse(request: FastifyRequest, statusCode: string, httpStatusCode: number, data?: unknown, responseTime?: number): LogModel;
     logAxiosHttpResponse(res?: AxiosResponse): LogModel;
     log(message: string, meta?: Record<string, unknown>): void;
     info(message: string, meta?: Record<string, unknown>): void;

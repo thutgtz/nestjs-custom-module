@@ -27,3 +27,4 @@ coverage/
 
 # Package lock (use npm ci in CI)
 package-lock.json
+release.sh

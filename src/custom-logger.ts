@@ -97,7 +97,7 @@ export class CustomLogger implements LoggerService {
   /**
    * Log API request/response with automatic sanitization
    */
-  logApiRequestResponse(request: FastifyRequest, statusCode: string, httpStatusCode: number, data?: unknown): LogModel {
+  logApiRequestResponse(request: FastifyRequest, statusCode: string, httpStatusCode: number, data?: unknown, responseTime?: number): LogModel {
     if (request.url.includes('health-check')) return new LogModel()
 
     const ctx = this.getContext()
@@ -112,6 +112,7 @@ export class CustomLogger implements LoggerService {
       statusCode,
       httpStatusCode,
       header: this.sanitize(request.headers),
+      responseTime,
     })
     this.logger.info(logInfo, 'api-log')
     return logInfo

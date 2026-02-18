@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.correlationMiddleware = exports.CORRELATION_ID_HEADER = void 0;
 exports.getCorrelationId = getCorrelationId;
 exports.getUserId = getUserId;
+exports.getRequestTimestamp = getRequestTimestamp;
 exports.setUserId = setUserId;
 exports.getRequestContext = getRequestContext;
 exports._getLoggerContext = _getLoggerContext;
@@ -18,6 +19,9 @@ function getCorrelationId() {
 }
 function getUserId() {
     return asyncLocalStorage.getStore()?.userId;
+}
+function getRequestTimestamp() {
+    return asyncLocalStorage.getStore()?.timestamp;
 }
 function setUserId(userId) {
     const store = asyncLocalStorage.getStore();
@@ -32,7 +36,8 @@ exports.CORRELATION_ID_HEADER = 'x-correlation-id';
 exports.correlationMiddleware = (0, fastify_plugin_1.default)((fastify) => {
     fastify.addHook('onRequest', (req, reply, done) => {
         const correlationId = req.headers[exports.CORRELATION_ID_HEADER] || (0, crypto_1.randomUUID)();
-        asyncLocalStorage.run({ correlationId }, () => {
+        const timestamp = Date.now();
+        asyncLocalStorage.run({ correlationId, timestamp }, () => {
             req.headers[exports.CORRELATION_ID_HEADER] = correlationId;
             reply.header(exports.CORRELATION_ID_HEADER, correlationId);
             done();
@@ -44,6 +49,7 @@ function _getLoggerContext() {
     return {
         correlationId: store?.correlationId,
         userId: store?.userId,
+        timestamp: store?.timestamp,
     };
 }
 //# sourceMappingURL=correlation.middleware.js.map

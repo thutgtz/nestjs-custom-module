@@ -6,6 +6,7 @@ import { CustomLogger } from '../custom-logger'
 import { CustomResponse } from './models/custom-response.model'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { EXCLUDE_RESPONSE_LOGGER_KEY } from '../decorators/exclude-response-logger.decorator'
+import { getRequestTimestamp } from '../middleware/correlation.middleware'
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -27,14 +28,18 @@ export class LoggingInterceptor implements NestInterceptor {
     return next
       .handle()
       .pipe(
-        tap((data: CustomResponse<any>) =>
+        tap((data: CustomResponse<any>) => {
+          const startTime = getRequestTimestamp()
+          const responseTime = startTime ? Date.now() - startTime : undefined
+          
           this.customLogger.logApiRequestResponse(
             request,
             data.status,
             response.statusCode,
-            excludeResponseLogger ? undefined : data
+            excludeResponseLogger ? undefined : data,
+            responseTime
           )
-        )
+        })
       )
   }
 }

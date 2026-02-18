@@ -87,7 +87,7 @@ let CustomLogger = CustomLogger_1 = class CustomLogger {
             maskPattern: this.options.maskPattern,
         });
     }
-    logApiRequestResponse(request, statusCode, httpStatusCode, data) {
+    logApiRequestResponse(request, statusCode, httpStatusCode, data, responseTime) {
         if (request.url.includes('health-check'))
             return new log_model_1.LogModel();
         const ctx = this.getContext();
@@ -102,6 +102,7 @@ let CustomLogger = CustomLogger_1 = class CustomLogger {
             statusCode,
             httpStatusCode,
             header: this.sanitize(request.headers),
+            responseTime,
         });
         this.logger.info(logInfo, 'api-log');
         return logInfo;
